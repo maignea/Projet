@@ -1,0 +1,7 @@
+com.runmycode.mapred
+com.runmycode.mapred.client
+com.runmycode.mapred.impl
+com.runmycode.mapred.mongoDB
+com.runmycode.mapred.server
+com.runmycode.ro
+test

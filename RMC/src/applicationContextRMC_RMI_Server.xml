@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://www.springframework.org/schema/beans
+http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+	<!-- JMS avec active MQ -->
+	
+	<bean id="connectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+		<property name="brokerURL" value="tcp://localhost:61616"/>
+	</bean>
+	
+	<!-- Synchronous communication -->
+	<!-- 
+	<bean id="clientToServerQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="clientToServerQueue"/>
+	</bean>
+	
+	<bean id="serverToClientQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="serverToClientQueue"/>
+	</bean> -->
+	
+	<!-- Queue for job submission -->
+	<bean id="jobSubmissionQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="jobSubmissionQueue"/>
+	</bean>	
+
+	<!-- Fin de JMS avec active MQ -->
+	
+	<bean id="jobInProgressFactory" class="com.runmycode.mapred.JobInProgressFactory"/>
+
+	<bean id="jobClient_ServerSide" class="com.runmycode.mapred.server.RMI_JobClient_ServerSide">
+		<constructor-arg ref="jobInProgressFactory"/>
+		<constructor-arg ref="connectionFactory"/>
+		<constructor-arg ref="jobSubmissionQueue"/>
+		<!-- <constructor-arg ref="serverToClientQueue"/>
+		<constructor-arg ref="clientToServerQueue"/> -->
+		<constructor-arg value="10"/>	<!-- number of threads for job computation-->
+	</bean>
+	
+	<bean class="org.springframework.remoting.rmi.RmiServiceExporter">
+		<!-- does not necessarily have to be the same name as the bean to be exported -->
+		<property name="serviceName" value="RunningJob"/>
+		<property name="service" ref="jobClient_ServerSide"/>
+		<property name="serviceInterface" value="com.runmycode.mapred.server.RMI_RunningJob"/>
+		<!-- defaults to 1099 -->
+		<property name="registryPort" value="1199"/>
+	</bean>
+	
+	<!-- Queue for computation reporting -->
+	<bean id="computingReportationQueue" class="org.apache.activemq.command.ActiveMQQueue">
+		<constructor-arg value="computingReportationQueue"/>
+	</bean>
+	
+	<bean id="reporterServerSide" class="com.runmycode.mapred.server.ReporterServerSide">
+		<constructor-arg ref="jobInProgressFactory"/>
+		<constructor-arg ref="connectionFactory"/>
+		<constructor-arg ref="computingReportationQueue"/>
+		<constructor-arg value="10"/>	<!-- number of threads for job computation-->
+		
+	</bean>
+		
+</beans>
+
