@@ -16,6 +16,7 @@ import com.runmycode.mapred.mongoDB.MongoDBFactory;
 class Person 
 {	
 	Mapper object;
+	//toto
 	
 	public Class<? extends Mapper> getMapper()
 	{
