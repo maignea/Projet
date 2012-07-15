@@ -32,7 +32,8 @@ public class ReducerThread extends Thread{
 	private QueueSession computingReportationQueueSession;
 	private QueueSender computingReportationQueueSender;
 	
-	public ReducerThread(Integer key, Iterator<DataIndex> values, String outputPath, Reporter reporter) throws JMSException {
+	public ReducerThread(Integer key, Iterator<DataIndex> values, String outputPath, Reporter reporter) throws JMSException
+	{
 		this.outputPath = outputPath;
 		this.key = key;
 		this.values = values;
@@ -67,7 +68,7 @@ public class ReducerThread extends Thread{
 				{		
 					line = reader.readLine();
 				}
-				String setOfvalues = line.substring(line.indexOf("Values=")+8);
+				String setOfvalues = line.substring(line.indexOf("Values=")+("Values=").length());
 				String[] valuesTab = setOfvalues.split(" ");
 				String resultValue = valuesTab[currentIndex.getColumn()];
 				

@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.MongoOperations;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.log.SysoLogger;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.runmycode.mapred.JobConf;
 import com.runmycode.mapred.JobID;
@@ -36,9 +37,6 @@ public class ReducerCollector implements OutputCollector<String, String>
 	private JobConf job;
 
 	//private int nbFile = 10;
-	
-	
-	
 	//int nbFile = 10;
 	
 	public ReducerCollector(String path) throws Exception
@@ -94,7 +92,7 @@ public class ReducerCollector implements OutputCollector<String, String>
 	public void collect(String key, String resultValue) throws IOException 
 	{		
 		try
-		{			
+		{	
 			document.add(new Paragraph("Avec n="+i+" : "+resultValue));
 	
 			i++;	        	
